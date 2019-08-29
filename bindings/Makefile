@@ -101,7 +101,10 @@ ruby: ruby/quackle_wrap.o
 
 d/quackle_wrap.cxx:
 	@test -d d || mkdir d
-	swig -c++ -o $@ $(INCLUDES) $(QTFLAGS) -d d_quackle.i
+	swig -c++ -o $@ $(INCLUDES) $(QTFLAGS) -d -d2 d_quackle.i
+	# SWIG bug https://github.com/swig/swig/issues/1593
+	sed -i 's/std\.c\.string/core.stdc.string/' d/quackle_im.d
+	sed -i 's/std\.c\.linux\.linux/core.sys.posix.dlfcn/' d/quackle_im.d
 
 d/quackle_wrap.o: d/quackle_wrap.cxx
 	$(CC) -std=c++14 -fPIC $(QTFLAGS) $(INCLUDES) -c $< -o $@
