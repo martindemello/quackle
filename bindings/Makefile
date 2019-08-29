@@ -97,6 +97,19 @@ ruby: ruby/quackle_wrap.o
 	$(CC) -std=c++14 -shared -Wl,--whole-archive $(QUACKLELIBS) -Wl,--no-whole-archive $(QTLIBS) $< -o ruby/quackle.so
 
 #---------------------------------
+# D
+
+d/quackle_wrap.cxx:
+	@test -d d || mkdir d
+	swig -c++ -o $@ $(INCLUDES) $(QTFLAGS) -d d_quackle.i
+
+d/quackle_wrap.o: d/quackle_wrap.cxx
+	$(CC) -std=c++14 -fPIC $(QTFLAGS) $(INCLUDES) -c $< -o $@
+
+d: d/quackle_wrap.o
+	$(CC) -std=c++14 -shared -Wl,--whole-archive $(QUACKLELIBS) -Wl,--no-whole-archive $(QTLIBS) $< -o d/quackle.so
+
+#---------------------------------
 
 .PHONY: clean go
 
